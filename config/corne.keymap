@@ -1,56 +1,135 @@
+
 /*
- * Copyright (c) 2020 The ZMK Contributors
- *
- * SPDX-License-Identifier: MIT
+ * Split-Lab — Corne V3 Choc
+ * CapCut Desktop — Windows
  */
 
 #include <behaviors.dtsi>
 #include <dt-bindings/zmk/keys.h>
-#include <dt-bindings/zmk/bt.h>
 
 / {
-        keymap {
-                compatible = "zmk,keymap";
-
-                default_layer {
-// -----------------------------------------------------------------------------------------
-// |  TAB |  Q  |  W  |  E  |  R  |  T  |   |  Y  |  U   |  I  |  O  |  P  | BSPC |
-// | CTRL |  A  |  S  |  D  |  F  |  G  |   |  H  |  J   |  K  |  L  |  ;  |  '   |
-// | SHFT |  Z  |  X  |  C  |  V  |  B  |   |  N  |  M   |  ,  |  .  |  /  | ESC  |
-//                    | GUI | LWR | SPC |   | ENT | RSE  | ALT |
-                        bindings = <
-   &kp TAB   &kp Q &kp W &kp E &kp R &kp T   &kp Y &kp U  &kp I     &kp O   &kp P    &kp BSPC
-   &kp LCTRL &kp A &kp S &kp D &kp F &kp G   &kp H &kp J  &kp K     &kp L   &kp SEMI &kp SQT
-   &kp LSHFT &kp Z &kp X &kp C &kp V &kp B   &kp N &kp M  &kp COMMA &kp DOT &kp FSLH &kp ESC
-                  &kp LGUI &mo 1 &kp SPACE   &kp RET &mo 2 &kp RALT
-                        >;
-                };
-                lower_layer {
-// -----------------------------------------------------------------------------------------
-// |  TAB |  1  |  2  |  3  |  4  |  5  |   |  6  |  7  |  8  |  9  |  0  | BSPC |
-// | BTCLR| BT1 | BT2 | BT3 | BT4 | BT5 |   | LFT | DWN |  UP | RGT |     |      |
-// | SHFT |     |     |     |     |     |   |     |     |     |     |     |      |
-//                    | GUI |     | SPC |   | ENT |     | ALT |
-                        bindings = <
-   &kp TAB    &kp N1       &kp N2       &kp N3       &kp N4       &kp N5         &kp N6   &kp N7   &kp N8 &kp N9    &kp N0 &kp BSPC
-   &bt BT_CLR &bt BT_SEL 0 &bt BT_SEL 1 &bt BT_SEL 2 &bt BT_SEL 3 &bt BT_SEL 4   &kp LEFT &kp DOWN &kp UP &kp RIGHT &trans &trans
-   &kp LSHFT  &trans       &trans       &trans       &trans       &trans         &trans   &trans   &trans &trans    &trans &trans
-                                    &kp LGUI     &trans       &kp SPACE      &kp RET  &trans   &kp RALT
-                        >;
-                };
-
-                raise_layer {
-// -----------------------------------------------------------------------------------------
-// |  TAB |  !  |  @  |  #  |  $  |  %  |   |  ^  |  &  |  *  |  (  |  )  | BSPC |
-// | CTRL |     |     |     |     |     |   |  -  |  =  |  [  |  ]  |  \  |  `   |
-// | SHFT |     |     |     |     |     |   |  _  |  +  |  {  |  }  | "|" |  ~   |
-//                    | GUI |     | SPC |   | ENT |     | ALT |
-                        bindings = <
-   &kp  TAB  &kp EXCL &kp AT &kp HASH &kp DLLR &kp PRCNT   &kp CARET &kp AMPS  &kp ASTRK &kp LPAR &kp RPAR &kp BSPC
-   &kp LCTRL &trans   &trans &trans   &trans   &trans      &kp MINUS &kp EQUAL &kp LBKT  &kp RBKT &kp BSLH &kp GRAVE
-   &kp LSHFT &trans   &trans &trans   &trans   &trans      &kp UNDER &kp PLUS  &kp LBRC  &kp RBRC &kp PIPE &kp TILDE
-                             &kp LGUI &trans   &kp SPACE   &kp RET   &trans    &kp RALT
-                        >;
-                };
+    macros {
+        // Сохранить проект, затем открыть окно экспорта
+        save_export: save_export {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            wait-ms = <100>;
+            tap-ms = <40>;
+            bindings =
+                <&kp LC(S)>
+                <&kp LC(E)>;
         };
+
+        // Отменить два последних действия
+        undo_twice: undo_twice {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            wait-ms = <60>;
+            tap-ms = <40>;
+            bindings =
+                <&kp LC(Z)>
+                <&kp LC(Z)>;
+        };
+
+        // Повторить два последних действия
+        redo_twice: redo_twice {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            wait-ms = <60>;
+            tap-ms = <40>;
+            bindings =
+                <&kp LC(LS(Z))>
+                <&kp LC(LS(Z))>;
+        };
+    };
+
+    keymap {
+        compatible = "zmk,keymap";
+
+        // ---------------------------------------------------------
+        // BASE — обычная раскладка
+        // ---------------------------------------------------------
+
+        default_layer {
+            display-name = "BASE";
+
+            bindings = <
+                &kp TAB    &kp Q &kp W &kp E &kp R &kp T
+                &kp Y      &kp U &kp I &kp O &kp P &kp BSPC
+
+                &kp LCTRL  &kp A &kp S &kp D &kp F &kp G
+                &kp H      &kp J &kp K &kp L &kp SEMI &kp SQT
+
+                &kp LSHFT  &kp Z &kp X &kp C &kp V &kp B
+                &kp N      &kp M &kp COMMA &kp DOT &kp FSLH &kp ESC
+
+                &kp LGUI &mo 1 &kp SPACE
+                &kp RET  &mo 2 &kp RALT
+            >;
+        };
+
+        // ---------------------------------------------------------
+        // LOWER — ОСНОВНОЙ МОНТАЖ
+        // ---------------------------------------------------------
+
+        lower_layer {
+            display-name = "EDIT";
+
+            bindings = <
+                // UNDO | REDO | SPLIT | TRIM LEFT | TRIM RIGHT | DELETE
+                &kp LC(Z) &kp LC(LS(Z)) &kp LC(B) &kp Q &kp W &kp DEL
+
+                // LEFT | DOWN | UP | RIGHT | PLAY | MARKER
+                &kp LEFT &kp DOWN &kp UP &kp RIGHT &kp SPACE &kp M
+
+                // COPY | CUT | PASTE | DUPLICATE | GROUP | UNGROUP
+                &kp LC(C) &kp LC(X) &kp LC(V) &kp LC(D) &kp LC(G) &kp LC(LS(G))
+
+                // SELECT | SPLIT TOOL | ENABLE | MAGNET | SNAP | PREVIEW
+                &kp A &kp B &kp V &kp P &kp N &kp S
+
+                // IN | OUT | SAVE | SAVE + EXPORT | UNDO X2 | REDO X2
+                &kp I &kp O &kp LC(S) &save_export &undo_twice &redo_twice
+
+                // IMPORT | EXPORT | SPEED | KEYFRAME | EXTRACT AUDIO | FIT
+                &kp LC(I) &kp LC(E) &kp LC(R) &kp LA(K) &kp LC(LS(S)) &kp LS(Z)
+
+                // THUMBS
+                &kp LC(S) &trans &kp SPACE
+                &kp LC(LS(B)) &save_export &kp LC(E)
+            >;
+        };
+
+        // ---------------------------------------------------------
+        // RAISE — РАБОТА С КЛИПАМИ И ТАЙМЛАЙНОМ
+        // ---------------------------------------------------------
+
+        raise_layer {
+            display-name = "CLIP";
+
+            bindings = <
+                // SPEED | REVERSE | EXTRACT AUDIO | KEYFRAME | IN | OUT
+                &kp LC(R) &kp LC(LA(R)) &kp LC(LS(S)) &kp LA(K) &kp I &kp O
+
+                // LEFT | DOWN | UP | RIGHT | PLAY | MARKER
+                &kp LEFT &kp DOWN &kp UP &kp RIGHT &kp SPACE &kp M
+
+                // MAGNET | SNAP | PREVIEW | ENABLE | NEXT MARK | PREV MARK
+                &kp P &kp N &kp S &kp V &kp LS(M) &kp LA(LS(M))
+
+                // SELECT | SPLIT | TRIM LEFT | TRIM RIGHT | DELETE | ESC
+                &kp A &kp B &kp Q &kp W &kp DEL &kp ESC
+
+                // ZOOM IN | ZOOM OUT | FIT | GROUP | UNGROUP | COMPOUND
+                &kp LC(EQUAL) &kp LC(MINUS) &kp LS(Z) &kp LC(G) &kp LC(LS(G)) &kp LA(G)
+
+                // UNDO COMPOUND | SPLIT ALL | PREV MARK | IMPORT | EXPORT | SAVE
+                &kp LA(LS(G)) &kp LC(LS(B)) &kp LA(LS(M)) &kp LC(I) &kp LC(E) &kp LC(S)
+
+                // THUMBS
+                &kp LC(S) &trans &kp SPACE
+                &kp LC(E) &trans &kp LC(I)
+            >;
+        };
+    };
 };
